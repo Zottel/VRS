@@ -1,0 +1,97 @@
+\documentclass[]{eptcs}
+\usepackage[utf8]{inputenc}
+
+\usepackage[toc,page]{appendix}
+
+% Defines \FloatBarrier
+% The "section" parameter makes floats stay in the section they are defined in.
+\usepackage[section]{placeins}
+
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{parcolumns}
+\usepackage{amsmath}
+\usepackage{url}
+\usepackage{breakurl}
+\usepackage{todonotes}
+
+
+\renewcommand{\abstractname}{Abstract}
+
+%TODO: center listings
+\lstset{language=C,frame=L,basicstyle=\small\ttfamily,tabsize=2}
+\lstset{numbersep=10pt}
+\lstset{xleftmargin=5.0ex}
+\lstset{numbers=left}
+% Captions to the bottom
+\lstset{captionpos=b}
+\lstset{breaklines=false}
+
+% Not used and has a tendency to break code.
+\lstset{mathescape=false}
+
+\newcommand{\ie}{i.~e.}
+\newcommand{\Ie}{I.~e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\Eg}{E.~g.}
+
+
+
+\title{Verification of Reactive Systems\\
+       Problem Set 2}
+
+\author{Julius Roob
+	\email{julius@juliusroob.de}
+}
+
+\begin{document}
+	\maketitle \newpage
+	%\tableofcontents \newpage
+	\listoftodos \newpage
+	
+	\newpage
+	\section*{Problem T1.1.}
+		\subsection*{a)}
+			Simple backtracking on a list containing the path during recursive descend/ascend.
+		
+		\subsection*{b)}
+			Breadth-first search requires the trajectories to be saved alongside the nodes to be visited in the queue.
+			Unlike backtracking, this approach will require a significant amount of memory.
+	
+	\newpage
+	\section*{Problem T1.2.}
+		Equivalence checks can be reduced to sat queries by the following rule:
+		\begin{align*}
+			\neg sat(\neg (C_{1} \Leftrightarrow C_{2})) \Leftrightarrow (C1 \Leftrightarrow C2)
+		\end{align*}
+		
+		As for the CNF requirement, every boolean expression can be rewritten to CNF, for example using the library attached for E1.4.:
+\begin{lstlisting}
+def is_equiv(C1, C2):
+	return None == run_minisat(~(EQUIV(C1, C2)).to_cnf())
+\end{lstlisting}
+	
+	
+	\newpage
+	\section*{Problem T1.3.}
+		Assuming the SAT-solver is working correctly, and that Resulution is known to be refutation-complete, the statement holds.
+	
+	\newpage
+	\section*{Problem E1.4.}
+		The websudoku solving code is given in the code/test.py file.
+		
+		Minisat can be used to generate sudokus, it provides (more or less) random assignments when given the sudoku rules.
+		These can be turned into sudoku puzzles by removing entries.
+		Uniqueness can be checked by:
+		
+\begin{lstlisting}
+	rules = sudok_rules_simple().to_cnf()
+def is_unique(sudoku):
+	assignment = reduce(AND, run_minisat(sudoku.constraints().to_cnf() & rules))
+	return None == run_minisat((sudoku.constraints() & ~assignment).to_cnf())
+\end{lstlisting}
+	
+	\newpage
+	\section*{Paper Reading}
+		
+\end{document}
